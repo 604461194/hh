@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+<body>
+	<form action="">
+		<p>
+			订单编号：<input type="text" name="billno"> 单据日期：<input type="date" name="billDate">
+		</p>
+		<p>
+			供应商：<input type="text" name="supplierName"> 供应商地址：<input type="text" name="supplierAddress">
+		</p>
+		<p>
+			部门：<input type="text" name="department"> 仓库：<input type="text" name="wareHouse">
+		</p>
+		<p>
+			采购人员：<input type="text" name="buyer"> 制单人员：<input type="text" name="executor">
+		</p>
+		<p>
+			入库明细：
+			<textarea rows="10" cols="70" name="details">sss</textarea>
+		</p>
+		<button type="button" class="jointest">加载测试数据</button>
+		<button type="button" class="joinfuwu">加载服务端数据</button>
+		<button type="button" class="baocun">保存</button>
+		<button type="reset">清空</button>
+	</form>
+	<script type="text/javascript">
+	var json=[];
+		$(".jointest").on("click",function(){
+			json={
+					"billno":"20160119001",          //单据编号
+					"billDate":"2016-01-19",         //单据日期
+					"supplierName":"联想株洲总代理",     // 供应商
+					"supplierAddress":"株洲天元区黄山路", //供应商地址
+					"department":"物控部",             //采购所属部门
+					"wareHouse":"株洲仓",              //入库仓库
+					"buyer":"牛采购",                  //采购人员
+					"executor":"小花" ,                //制单人
+					"details":[{                      //商品明细数据
+					"billno":"20160119001",         //商品编号
+					"lineId":1,                     //序号，或者行号
+					"goodsName":"联想笔记本",          //商品名称
+					"goodsNum":10,                  //数量
+					"goodsPrice":3000.00,           //单价
+					"goodsMoneyamt":30000.00,       //金额
+					"isPresent":0               //是否赠品
+				},{
+					"billno":"20160119001",
+					"lineId":2,
+					"goodsName":"数码相机",
+					"goodsNum":10,
+					"goodsPrice":2000.00,
+					"goodsMoneyAmt":20000.00,
+					"isPresent":1
+				}]};
+			append(json);
+		})
+		
+		$(".baocun").on("click",function(){
+			var bill={};
+			bill["billno"]=$("[name=billno]").val();
+			bill["billDate"]=$("[name=billDate]").val();
+			bill["supplierName"]=$("[name=supplierName]").val();
+			bill["supplierAddress"]=$("[name=supplierAddress]").val();
+			bill["department"]=$("[name=department]").val();
+			bill["wareHouse"]=$("[name=wareHouse]").val();
+			bill["buyer"]=$("[name=buyer]").val();
+			bill["executor"]=$("[name=executor]").val();
+			bill["detail"]=$("[name=details]").val();
+			$.post("/kaoshi/goods/jointest",bill,function(data){
+				alert(data);
+			})
+		});
+		
+		 $(".joinfuwu").on("click",function(){
+			$.getJSON("/kaoshi/goods/joinfuwu",{},function(data){
+				json=data;
+				append(json);
+			})
+		}) 
+		
+		function append(json){
+			$("[name=billno]").val(json.billno);
+			$("[name=billDate]").val(json.billDate);
+			$("[name=supplierName]").val(json.supplierName);
+			$("[name=supplierAddress]").val(json.supplierAddress);
+			$("[name=department]").val(json.department);
+			$("[name=wareHouse]").val(json.wareHouse);
+			$("[name=buyer]").val(json.buyer);
+			$("[name=executor]").val(json.executor);
+			$('[ name=details]').val(JSON.stringify(json.details));
+		}
+	</script>
+</body>
+</html>
