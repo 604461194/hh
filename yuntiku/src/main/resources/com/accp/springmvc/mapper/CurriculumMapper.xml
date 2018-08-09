@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.accp.springmvc.mapper.CurriculumMapper">
+
+ <select id="selectById" resultType="Curriculum">
+ SELECT
+ curriculum.`curriculumId`,curriculum.`curriculumName`,curriculum.`semesterId` 
+ FROM
+`curriculum` AS curriculum ,`users` AS users,`classes` AS classes 
+ WHERE
+ users.`classesId`=classes.`classesId`
+ AND
+ curriculum.`semesterId`=classes.`semesterId`
+ AND 
+ users.`userId`=#{userId}
+ </select>
+ 
+</mapper>

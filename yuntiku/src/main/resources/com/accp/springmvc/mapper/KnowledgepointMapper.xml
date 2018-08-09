@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.accp.springmvc.mapper.KnowledgepointMapper">
+<select id="selectById" resultType="Knowledgepoint">
+SELECT * FROM `knowledgepoint` WHERE `chapterId`=#{chapterId}
+</select>
+
+
+<select id="selectKnowledgepoint" resultType="Knowledgepoint">
+SELECT * FROM `knowledgepoint` WHERE `knowledgePointId`=#{knowledgePointId}
+
+</select>
+
+</mapper>
