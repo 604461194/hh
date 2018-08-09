@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.accp.dao.IUserDao">
+
+    <!-- 四表联查关系映射 -->
+	<resultMap type="user" id="userMap">
+		<id column="username" property="userName" />
+		<result column="userpwd" property="userPwd" />
+		<result column="rid" property="rid" />
+		<association property="role" resultMap="roleMap"/>
+	</resultMap>
+	<resultMap type="role" id="roleMap">
+		<id column="rid" property="rid" />
+		<result column="rcode" property="rcode" />
+		<result column="rname" property="rname" />
+		<result column="rstatus" property="rstatus" />
+		<result column="rcd" property="createdate" />
+		<result column="createby" property="createby" />
+		<collection property="functions" ofType="function">
+			<id column="fid" property="fid" />
+			<result column="fcode" property="fcode" />
+			<result column="fname" property="fname" />
+			<result column="furl" property="furl" />
+			<result column="fpid" property="fpid" />
+			<result column="fcd" property="createdate" />
+			<association property="parentFun" column="fpid" select="selectParentFun"></association>
+		</collection>
+	</resultMap>
+	
+	<select id="selectParentFun" resultType="function">
+	    	select * from tbl_function where fid=#{0}
+	</select>
+	
+	<!-- 登陆验证，查询出角色，操作，权限 -->
+	<select id="queryUserWithRole" resultMap="userMap">
+		SELECT
+		u.username,
+		u.userpwd,
+		r.rid,
+		r.rname,
+		r.rcode,
+		r.rstatus,
+		r.createby,
+		r.createdate rcd,
+		f.fid,
+		f.fcode,
+		f.fname,
+		f.furl,
+		f.fpid,
+		f.createdate fcd
+		FROM tbl_user u INNER JOIN tbl_role r
+		ON u.rid=r.rid
+		INNER JOIN tbl_perm p ON p.rid=r.rid
+		INNER JOIN tbl_function f ON f.fid=p.fid
+		WHERE username=#{userName} and
+		userpwd=#{userPwd}
+	</select>
+
+
+</mapper>
