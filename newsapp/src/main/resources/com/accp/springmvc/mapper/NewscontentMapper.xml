@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.accp.springmvc.mapper.NewscontentMapper">
+	<select id="selectNewsById" resultType="Newscontent">
+		SELECT newscontent.`newsId`,
+		`content`,
+		`title`,
+		`userId`,
+		`typeId`,
+		zhiliao.`path` AS "zhiliao.path",
+		zhiliao.`type` AS "zhiliao.type"
+		FROM
+		`newscontent`AS newscontent,`zhiliao` AS zhiliao
+		WHERE
+		`typeId`=#{typeId}
+		AND
+		newscontent.`newsId`=zhiliao.`newsId`
+	</select>
+
+
+<select id="selectNews" resultType="Newscontent">
+		SELECT newscontent.`newsId`,
+		`content`,
+		`title`,
+		newscontent.`userId`,
+		users.`userName` AS "users.userName",
+		`typeId`,
+		zhiliao.`path` AS "zhiliao.path",
+		zhiliao.`type` AS "zhiliao.type"
+		FROM
+		`newscontent`AS newscontent,`zhiliao` AS zhiliao,`users` AS users
+		WHERE
+		newscontent.`newsId`=#{newsId}
+		AND
+		newscontent.`newsId`=zhiliao.`newsId`
+		AND 
+		users.`userId`=newscontent.`userId`
+	</select>
+	
+	<select id="selectZan" resultType="int">
+	SELECT COUNT(1) AS counts FROM `zan` WHERE `newsId`=#{newsId}
+	</select>
+	
+	<select id="gfZan" resultType="Zan">
+	SELECT * FROM `zan` WHERE `newsId`=#{newsId} AND `userId`=#{userId}
+	</select>
+	
+	<insert id="zan">
+	INSERT INTO `news`.`zan` ( `userId`, `newsId`) 
+VALUES
+  (#{userId}, #{newsId}) ;
+	</insert>
+	
+	<insert id="addPinglun">
+	INSERT INTO `news`.`pinglun` (
+  `content`,
+  `newsId`,
+  `userName`
+) 
+VALUES
+  (
+    #{content},
+    #{newsId},
+    #{userName}
+  ) ;
+
+	</insert>
+	
+	<select id="findPingL" resultType="Pinglun">
+	SELECT * FROM `pinglun` WHERE `newsId`=#{newsId}
+	</select>
+</mapper>
