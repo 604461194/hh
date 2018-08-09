@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="accp.com.spring4.mapper.PowerMapper">
+	 <select id="findPower" resultType="Power">
+		 SELECT * FROM `power` WHERE `roleId`=#{roleId}
+	 </select>
+</mapper>

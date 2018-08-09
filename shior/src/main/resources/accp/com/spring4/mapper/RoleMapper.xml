@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="accp.com.spring4.mapper.RoleMapper">
+ <select id="findRole" resultType="Role">
+ SELECT * FROM `role` WHERE userId=#{userId}
+ </select>
+</mapper>
