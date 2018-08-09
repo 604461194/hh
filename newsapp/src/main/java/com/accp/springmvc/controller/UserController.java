@@ -16,6 +16,8 @@ import com.accp.springmvc.service.UsersService;
 @RequestMapping("/user")
 public class UserController {
 
+	
+	
 	@Autowired
 	public UsersService usersService;
 	
