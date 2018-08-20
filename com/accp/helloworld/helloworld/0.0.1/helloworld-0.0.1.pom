@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<!--maven配置版本-->
+	<modelVersion>4.0.0</modelVersion>
+	<!--公司的项目-->
+	<groupId>com.accp.helloworld</groupId>
+	<!--项目中分组-->
+	<artifactId>helloworld</artifactId>
+	<!--版本-->
+	<version>0.0.1</version>
+	<!--项目名称描述-->
+	<name>我的第一个Maven项目</name>
+
+	<!--配置jar包依赖-->
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<!--指定jar保留的模式-->
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>
