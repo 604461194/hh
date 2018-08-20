@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.accp.springmvc.mapper.RecorddetailMapper">
+ <insert id="insertRecordDetail">
+ INSERT INTO `yuntoku`.`recorddetail` (
+  `subjectId`,
+  `uAnswer`,
+  `recordId`,
+  `validity`
+) 
+VALUES
+  (
+    #{subjectId},
+    #{uAnswer},
+    #{recordId},
+    #{validity}
+  ) ;
+
+ </insert>
+ 
+ 
+ <select id="selectAll" resultType="Timu">
+ SELECT
+ timu.`subjectId`,
+ timu.`content`,
+ timu.`knowledgePointId`,
+ timu.`optionContentA`,
+ timu.`optionContentB`,
+ timu.`optionContentC`,
+ timu.`optionContentD`,
+ timu.`optionContentE`,
+ timu.`validity`,
+ recorddetail.`uAnswer` AS "recorddetail.uAnswer",
+ recorddetail.`validity` AS "recorddetail.validity",
+ record.`recordName` AS "record.recordName"
+  FROM 
+ `timu` AS timu,`recorddetail` AS recorddetail,`record` AS record
+  WHERE
+  timu.`subjectId`=recorddetail.`subjectId` 
+  AND
+  record.`recordId`=recorddetail.`recordId`
+  AND
+  recorddetail.`recordId`=#{recordId}
+ 
+ </select>
+ 
+ 
+</mapper>

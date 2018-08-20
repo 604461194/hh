@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	">
+
+	<!-- 使用基础连接池 -->
+	<bean id="ds" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://127.0.0.1:3306/y2_test?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true" />
+		<property name="username" value="root" />
+		<property name="password" value="yesheng" />
+		<property name="initialSize" value="1" />
+		<property name="maxActive" value="60" />
+		<property name="minIdle" value="1" />
+		<property name="maxIdle" value="60" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="120" />
+		<property name="logAbandoned" value="true" />
+		<property name="maxWait" value="2000" />
+		<property name="validationQuery" value="select 1" />
+	</bean>
+
+	<!-- 事务管理器 -->
+	<bean id="transManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="ds"></property>
+	</bean>
+
+	<!-- spring集成mybaits配置 -->
+	<bean id="ssf" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="ds"></property>
+		<property name="configLocation" value="classpath:/mybatis/MyBatisConfig.xml" />
+		<property name="mapperLocations" value="classpath:/mybatis/mapping/*.xml" />
+	</bean>
+
+	<!-- 扫描sql映射,并自动byType注入dao -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="ssf"></property>
+		<!-- 多个包以英文逗号隔开，例如 :com.accp.x.dao,com.accp.y.dao -->
+		<property name="basePackage" value="com.accp.dao"></property>
+	</bean>
+
+	<tx:advice id="txAdvice" transaction-manager="transManager">
+		<tx:attributes>
+			<tx:method name="add*" propagation="REQUIRED" isolation="READ_COMMITTED"
+				rollback-for="java.lang.Exception" />
+			<tx:method name="remove*" propagation="REQUIRED" isolation="READ_COMMITTED"
+				rollback-for="java.lang.Exception" />
+			<tx:method name="modify*" propagation="REQUIRED" isolation="READ_COMMITTED"
+				rollback-for="java.lang.Exception" />
+			<tx:method name="*" propagation="SUPPORTS" isolation="READ_COMMITTED"
+				read-only="true" rollback-for="java.lang.Exception" />
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:advisor advice-ref="txAdvice" pointcut="within(com.accp.biz..*)" />
+	</aop:config>
+
+	<context:component-scan base-package="com.accp.biz.impl"
+		use-default-filters="true" />
+
+</beans>

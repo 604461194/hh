@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath*:database.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+
+	<!-- 扫描带有元注解的包中的类，相等于声明了许多的Bean对象 -->
+	<context:component-scan base-package="com.accp.spring4" />
+
+	<!-- 启用事务的元注解 -->
+	<tx:annotation-driven />
+	
+	<!-- 启用MVC源注解配置 -->
+	<mvc:annotation-driven />
+	
+
+	<!-- 1. 配置数据源 -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName">
+			<value>${driverClassName}</value>
+		</property>
+		<property name="url">
+			<value>${url}</value>
+		</property>
+		<property name="username">
+			<value>${username}</value>
+		</property>
+		<property name="password">
+			<value>${password}</value>
+		</property>
+	</bean>
+
+	<!-- 2. 配置事务管理 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- 视图解析 -->
+		<!-- <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver"> 
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+		<property name="prefix" value="/WEB-INF/yuntk/" />
+		<property name="suffix" value=".jsp" />
+		 </bean> -->
+		 
+		 <!-- 视图解析 -->
+	 	 <bean
+			class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+			<property name="prefix" value="/WEB-INF/goods/" />
+			<property name="suffix" value=".html" />
+		</bean> 
+	<!-- 忽略静态资源:由tomcat按默认方式处理静态资源，不通过springmvc框架 -->
+	<mvc:default-servlet-handler />
+
+	<!-- 5. 配置mybitasSqlSessionFactoryBean -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 配置别名路径 -->
+		<property name="typeAliasesPackage" value="com.accp.spring4.entity"></property>
+		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+	</bean>
+	<!-- 6. 自动扫描所有的Dao[Mapper](和xml映射文件) ,自动创建所有的dao的实现类 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.accp.spring4.mapper"></property>
+	</bean>
+
+	<!-- 1.定义任务 -->
+	<!-- <bean name="myjob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> 
+		<property name="targetClass" value="com.accp.springmvc.service.BookService"></property> 
+		<property name="targetObject" ref="bookService"></property> <property name="targetMethod" 
+		value="delete"></property> </bean> 2.配置trigger定时器 <bean name="cronTrigger" 
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> 指定任务 
+		<property name="jobDetail" ref="myjob"></property> 指定cron表达式 <property name="cronExpression" 
+		value="1/3 * * * * ? *"></property> </bean> 3.配置schedule计划 <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> 
+		配置触发器 <property name="triggers"> <list> <ref bean="cronTrigger" /> </list> 
+		</property> </bean> -->
+
+	<!-- 跨域访问 -->
+	<!--  <mvc:cors>
+	  <mvc:mapping path="/**" allowed-origins="*" allow-credentials="true" 
+		max-age="12000" allowed-methods="GET,POST,PUT,*"/> 
+		</mvc:cors> -->
+		
+		
+</beans>

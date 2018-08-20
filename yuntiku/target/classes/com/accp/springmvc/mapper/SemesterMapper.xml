@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.accp.springmvc.mapper.SemesterMapper">
+<select id="selectById" resultType="Semester">
+SELECT semester.`semesterId`,semester.`semesterName` 
+FROM `classes` AS classes,`semester` AS semester 
+WHERE 
+classes.`semesterId`=semester.`semesterId`
+ AND `classesId`=#{id}
+</select>
+ 
+ <select id="selectAll" resultType="Semester">
+ SELECT 
+  `semesterId`,
+  `semesterName` 
+FROM
+  `yuntoku`.`semester` 
+ </select>
+ 
+</mapper>

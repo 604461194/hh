@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.accp.spring4.mapper.BillMapper">
+<select id="last" resultType="Bill">
+SELECT * FROM `bill` ORDER BY `billno` DESC LIMIT 1
+</select>
+<insert id="insert" parameterType="Bill" useGeneratedKeys="true" keyProperty="billno" keyColumn="billno">
+INSERT INTO `test2`.`bill` (
+  `billno`,
+  `billDate`,
+  `supplierName`,
+  `supplierAddress`,
+  `department`,
+  `wareHouse`,
+  `buyer`,
+  `executor`
+) 
+VALUES
+  (
+    #{billno},
+    #{billDate},
+    #{supplierName},
+    #{supplierAddress},
+    #{department},
+    #{wareHouse},
+    #{buyer},
+    #{executor}
+  ) ;
+
+
+</insert>
+</mapper>
